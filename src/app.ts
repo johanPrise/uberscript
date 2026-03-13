@@ -80,17 +80,14 @@ const displayOrders = () => {
     
     user.orders.forEach(order => {
         const li = document.createElement("li");
-        li.className = "list-group-item";
+        li.className = "list-group-item d-flex justify-content-between align-items-center mb-1";
         const names = order.meals.map(m => m.name).join(", ");
+        
         li.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>Commande #${order.id}</strong><br>
-                    <small class="text-muted">${names}</small>
-                </div>
-                <span class="badge bg-success">${order.total}€</span>
-            </div>
+            <span>Commande #${order.id} : ${names} - Payé : <strong>${order.total}€</strong></span>
+            <button class="btn btn-outline-danger btn-sm" data-order-id="${order.id}">Annuler</button>
         `;
+        
         orderListElement.appendChild(li);
     });
 };
@@ -117,6 +114,19 @@ mealListElement.addEventListener("click", (event) => {
                 }
             }
         }
+    }
+});
+
+orderListElement.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+    const orderIdStr = target.dataset.orderId;
+    
+    if (orderIdStr) {
+        const orderId = Number.parseInt(orderIdStr, 10);
+        user.removeOrder(orderId);
+        saveOrders(user.orders);
+        displayWallet();
+        displayOrders();
     }
 });
 

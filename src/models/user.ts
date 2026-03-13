@@ -28,7 +28,7 @@ export class User {
     return total;
   }
 
-  getTotalSpent():number{
+  getTotalSpent(): number {
     return this.orders.reduce((sum, order) => sum + order.total, 0);
   }
 
@@ -40,24 +40,39 @@ export class User {
     }
 
     if (typeof this.wallet === "number") {
-        this.wallet -= meal.price;
+      this.wallet -= meal.price;
     } else {
-        let remainingPrice = meal.price;
-        for(const account in this.wallet) {
-            if (remainingPrice <= 0) break;
+      let remainingPrice = meal.price;
+      for (const account in this.wallet) {
+        if (remainingPrice <= 0) break;
 
-            const deduction = Math.min(this.wallet[account], remainingPrice);
-            this.wallet[account] -= deduction;
-            remainingPrice -= deduction;
+        const deduction = Math.min(this.wallet[account], remainingPrice);
+        this.wallet[account] -= deduction;
+        remainingPrice -= deduction;
+      }
     }
-  }
 
     const newOrder: Order = {
-        id: Date.now(),
-        meals: [meal],
-        total: meal.price
-};
+      id: Date.now(),
+      meals: [meal],
+      total: meal.price,
+    };
     this.orders.push(newOrder);
     return newOrder;
+  }
+
+  removeOrder(orderId: number) {
+    const orderToCancel = this.orders.find((o) => o.id === orderId);
+    if (!orderToCancel) return;
+
+    if (typeof this.wallet === "number") {
+      this.wallet += orderToCancel.total;
+    } else {
+      const firstAccountKey = Object.keys(this.wallet)[0];
+      if (firstAccountKey) {
+        this.wallet[firstAccountKey] += orderToCancel.total;
+      }
     }
+    this.orders = this.orders.filter((o) => o.id !== orderId);
+  }
 }
