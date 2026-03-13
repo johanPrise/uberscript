@@ -23,11 +23,21 @@ userPanel.innerHTML = `
         </div>
     </div>
 `;
+
+userPanel.innerHTML = `
+<hr>
+    <h3>Espace de Bob</h3>
+    <p>Solde restant: <strong id="wallet-display">...</strong></p>
+    <p>Total dépensé chez nous: <strong class="text-danger" id="total-spent-display">...</strong></p>
+    <h4>Ses commandes :</h4>
+    <ul id="orderList"></ul>
+`
 document.body.appendChild(userPanel);
 
 const mealListElement = document.getElementById("mealList") as HTMLUListElement;
 const walletDisplayElement = document.getElementById("wallet-display") as HTMLSpanElement;
 const orderListElement = document.getElementById("orderList") as HTMLUListElement;
+const totalSpentDisplayElement = document.getElementById("total-spent-display") as HTMLSpanElement;
 
 const displayMeals = (meals: Meal[]) => {
     if (!mealListElement) {
@@ -56,6 +66,8 @@ const displayMeals = (meals: Meal[]) => {
 
 const displayWallet = () => {
     walletDisplayElement.textContent = user.getTotalWallet() + '€';
+    totalSpentDisplayElement.textContent = user.getTotalSpent() + '€';
+
 };
 
 const displayOrders = () => {

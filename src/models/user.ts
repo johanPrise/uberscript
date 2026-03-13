@@ -27,7 +27,11 @@ export class User {
     }
     return total;
   }
-  
+
+  getTotalSpent():number{
+    return this.orders.reduce((sum, order) => sum + order.total, 0);
+  }
+
   orderMeal(meal: Meal) {
     const totalMoney = this.getTotalWallet();
 
