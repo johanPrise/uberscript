@@ -17,3 +17,4 @@ npm-debug.log*
 # Environment variables
 .env
 .env.local
+node_modules/
