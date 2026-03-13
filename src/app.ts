@@ -7,6 +7,20 @@ import { saveOrders, loadOrders } from "./services/storage.service.js";
 let allMeals: Meal[] = [];
 const user = new User(1, "Yorick", 150, []);
 
+const filterPanel = document.createElement("div");
+filterPanel.className = "input-group mb-4 mt-4";
+filterPanel.innerHTML = `
+    <span class="input-group-text">Prix Max:</span>
+    <input type="number" id="maxPriceInput" class="form-control" placeholder="15">
+    <button class="btn btn-outline-secondary" id="filterBtn" type="button">Filtrer</button>
+    <button class="btn btn-outline-warning" id="resetFilterBtn" type="button">Reset</button>
+`;
+document.body.insertBefore(filterPanel, document.body.firstChild);
+
+const maxPriceInput = document.getElementById("maxPriceInput") as HTMLInputElement;
+const filterBtn = document.getElementById("filterBtn") as HTMLButtonElement;
+const resetFilterBtn = document.getElementById("resetFilterBtn") as HTMLButtonElement;
+
 const userPanel = document.createElement("div");
 userPanel.className = "mt-5";
 userPanel.innerHTML = `
@@ -128,6 +142,20 @@ orderListElement.addEventListener("click", (event) => {
         displayWallet();
         displayOrders();
     }
+});
+
+filterBtn.addEventListener("click", () => {
+    const maxPrice = Number.parseFloat(maxPriceInput.value);
+    
+    if (Number.isNaN(maxPrice)) return;
+
+    const filteredMeals = allMeals.filter(meal => meal.price <= maxPrice);
+    displayMeals(filteredMeals);
+});
+
+resetFilterBtn.addEventListener("click", () => {
+    maxPriceInput.value = "";
+    displayMeals(allMeals);
 });
 
 const meals = await fetchMeals();
