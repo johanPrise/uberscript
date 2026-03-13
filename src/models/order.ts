@@ -5,3 +5,7 @@ export type Order = {
     meals: Meal[];
     total:number;
 }
+
+export type OrderStorage = Omit<Order, "meals"> & {
+    mealIds: number[];
+}
